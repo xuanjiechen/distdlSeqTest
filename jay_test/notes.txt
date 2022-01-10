@@ -1,0 +1,21 @@
+1. isinstance() function to check for the instance type
+    https://www.w3schools.com/python/ref_func_isinstance.asp
+    https://github.com/pytorch/pytorch/blob/3a21f38a2e121e336216ba49e517161055918527/torch/nn/modules/module.py#L380
+
+2. add_module function to add the child module into the current module
+    https://github.com/pytorch/pytorch/blob/3a21f38a2e121e336216ba49e517161055918527/torch/nn/modules/module.py#L370
+
+3. GUESS: the forward function in the Seq class is only calling the forward() in module itself?
+
+4. register_forward_pre_hook:
+    https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.register_forward_hook
+    https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/module.py#L1038
+
+    what is "hook"?
+
+5. buffer_manager
+
+6. how to get the partition info? layer.P_x?
+
+7. pad stride?
+
