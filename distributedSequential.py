@@ -77,11 +77,11 @@ class DistributedSequential(Module):
         return padding, dilation, kernel_size, stride
 
     """
-    Calculating the shape for conv or pooling layer
+    Calculating the shape for conv layer
     layer: convlutional layer to use
     inshape: shape of global input tensor (2d)
     """
-    def conv_pool_out_shape(self, layer, inshape):
+    def conv_out_shape(self, layer, inshape):
 
         padding, dilation, kernel_size, stride = self._convert_to_list(layer)
 
@@ -92,6 +92,25 @@ class DistributedSequential(Module):
                             / stride[1] + 1)
 
         outshape = [inshape[0], layer.out_channels, height, width]
+
+        return outshape
+    
+    """
+    Calculating the shape for pooling layer
+    layer: pooling layer to use
+    inshape: shape of global input tensor (2d)
+    """
+    def pool_out_shape(self, layer, inshape):
+
+        padding, dilation, kernel_size, stride = self._convert_to_list(layer)
+
+        height = np.floor((inshape[2] - dilation[0] * (kernel_size[0] - 1) - 1) \
+                            / stride[0] + 1)
+
+        width = np.floor((inshape[3] - dilation[1] * (kernel_size[1] - 1) - 1) \
+                            / stride[1] + 1)
+
+        outshape = [inshape[0], inshape[1], height, width]
 
         return outshape
 
@@ -112,10 +131,10 @@ class DistributedSequential(Module):
         for layer in self.modules:
             # if it is conv layer
             if type(layer).__name__ in self._legal_convolutions:
-                outshape = self.conv_pool_out_shape(layer, outshape)
+                outshape = self.conv_out_shape(layer, outshape)
             # if it is pool layer
             elif type(layer).__name__ in self._legal_pooling:
-                outshape = self.conv_pool_out_shape(layer, outshape)
+                outshape = self.pool_out_shape(layer, outshape)
             # if it is act layer
             # size not change
             else:
